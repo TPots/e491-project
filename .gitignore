@@ -71,14 +71,14 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-Assets/DreamForestTree/
-Assets/Sample/
-Assets/Scene/
-Assets/Tree-Textures/
-Library/
-Logs/
-Packages/
-ProjectSettings/
-UserSettings/
+/Assets/DreamForestTree/
+/Assets/Sample/
+/Assets/Scene/
+/Assets/Tree-Textures/
+/Library/
+/Logs/
+/Packages/
+/ProjectSettings/
+/UserSettings/
 *.asset
 *.meta
