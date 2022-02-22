@@ -2,32 +2,18 @@
 
 public class CaveCamera : MonoBehaviour{
 
-    public GameObject userObject;
     public GameObject displayObject;
 
     public Vector3 userToDisplay;
 
     public float normalDistance;
 
-    public void init( GameObject userObj, GameObject displayObj)
-    {
-        GameObject thisObj = this.gameObject;
-        this.userObject = userObj;
-        this.displayObject = displayObj;
-        thisObj.transform.SetParent( userObj.transform );
-        thisObj.transform.position = userObj.transform.position;
-        thisObj.transform.rotation = userObj.transform.rotation;
-        UpdateToUserPosition();
-    }
-
     [ExecuteAlways]
-    public void UpdateToUserPosition()
+    public void updateScr()
     {
-        this.gameObject.transform.position = this.userObject.transform.position;
-        this.userToDisplay = this.displayObject.transform.position - this.userObject.transform.position;
         CalculateProjectionMatrix();
     }
-
+    /*
     public void OnDrawGizmos()
     {
         GameObject thisObj = this.gameObject;
@@ -54,40 +40,35 @@ public class CaveCamera : MonoBehaviour{
             userObj.transform.position + this.userToDisplay
         );
     }
-
+    */
     public void CalculateProjectionMatrix()
     {
-        GameObject userObj = this.userObject;
         GameObject displayObj = this.displayObject;
         CaveDisplay displayScr = displayObj.GetComponent<CaveDisplay>();
-        GameObject thisObj = this.gameObject;
-        Camera camera = thisObj.GetComponent<Camera>();
+        Camera camera = this.gameObject.GetComponent<Camera>();
 
-
-        this.normalDistance = Vector3.Dot( displayObj.transform.position - userObj.transform.position, displayObj.transform.forward );
+        this.normalDistance = Vector3.Dot( displayObj.transform.position - this.gameObject.transform.position, displayObj.transform.forward );
         float normalDistance = this.normalDistance;
 
         float displayWidth = displayScr.caveDisplayTemplate.displayDimentions[0];
         float displayHeight = displayScr.caveDisplayTemplate.displayDimentions[1];
         
-        float near = normalDistance; //Mathf.Max(normalDistance,0.25f);
+        float near = Mathf.Max(normalDistance,displayScr.minimumNormalHorizontal) ;
+
         float far = camera.farClipPlane;
 
-        //float scaledDisplayWidth = Mathf.Max( 1f, Mathf.Abs( this.userToDisplay.magnitude / displayWidth));
-        //float scaledDisplayHeight = Mathf.Max( 1f, Mathf.Abs( this.userToDisplay.magnitude / displayHeight));
-
-        float scaledDisplayWidth = Mathf.Max( 1f, Mathf.Abs( near / displayWidth));
-        float scaledDisplayHeight = Mathf.Max( 1f, Mathf.Abs( near / displayHeight));
+        float scaledDisplayWidth = Mathf.Abs( near / displayWidth );
+        float scaledDisplayHeight = Mathf.Abs( near / displayHeight );
 
         Vector3 scaledRight = (displayScr.edgeRight - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
         Vector3 scaledTop = (displayScr.edgeTop - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
         Vector3 scaledLeft = (displayScr.edgeLeft - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
         Vector3 scaledBottom = (displayScr.edgeBottom - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
 
-        float right = Vector3.Dot((scaledRight - thisObj.transform.position), displayObj.transform.right ) ;
-        float left = Vector3.Dot((scaledLeft - thisObj.transform.position), displayObj.transform.right ) ;
-        float top = Vector3.Dot((scaledTop - thisObj.transform.position), displayObj.transform.up );
-        float bottom = Vector3.Dot((scaledBottom - thisObj.transform.position), displayObj.transform.up ) ;
+        float right = Vector3.Dot((scaledRight - this.gameObject.transform.position), displayObj.transform.right ) ;
+        float left = Vector3.Dot((scaledLeft - this.gameObject.transform.position), displayObj.transform.right ) ;
+        float top = Vector3.Dot((scaledTop - this.gameObject.transform.position), displayObj.transform.up );
+        float bottom = Vector3.Dot((scaledBottom - this.gameObject.transform.position), displayObj.transform.up ) ;
 
         Vector3 dispUp = (displayScr.cornerUpperRight - displayScr.cornerLowerRight).normalized;
         Vector3 dispRight =  (displayScr.cornerUpperRight - displayScr.cornerUpperLeft).normalized;
@@ -111,7 +92,7 @@ public class CaveCamera : MonoBehaviour{
         displayM[3,3] = 1f;
 
         Matrix4x4 translationM = Matrix4x4.Translate(
-            - userObj.transform.position
+            - this.gameObject.transform.position
         );
 
         Matrix4x4 rotationM = Matrix4x4.Rotate(
@@ -135,7 +116,7 @@ public class CaveCamera : MonoBehaviour{
         camera.Reset();
     }
     public void Update(){
-        UpdateToUserPosition();
+        updateScr();
     }
 
     public void LateUpdate(){
