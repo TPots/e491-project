@@ -29,7 +29,7 @@ public class CaveSetupTemplateEditor : Editor{
         }
     }
 }
-
+/*
 [CustomEditor(typeof(CaveSetup))]
 public class CaveSetupEditor : Editor{
     public override void OnInspectorGUI(){
@@ -42,3 +42,4 @@ public class CaveSetupEditor : Editor{
         }
     }
 }
+    */

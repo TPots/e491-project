@@ -3,12 +3,12 @@
 public class CaveCamera : MonoBehaviour{
 
     public GameObject displayObject;
+    public CaveDisplay displayScr;
 
     public Vector3 userToDisplay;
 
     public float normalDistance;
 
-    [ExecuteAlways]
     public void updateScr()
     {
         CalculateProjectionMatrix();
@@ -44,8 +44,10 @@ public class CaveCamera : MonoBehaviour{
     public void CalculateProjectionMatrix()
     {
         GameObject displayObj = this.displayObject;
-        CaveDisplay displayScr = displayObj.GetComponent<CaveDisplay>();
+        CaveDisplay displayScr = this.displayScr;
         Camera camera = this.gameObject.GetComponent<Camera>();
+
+        Debug.Log( this.gameObject.transform.position );
 
         this.normalDistance = Vector3.Dot( displayObj.transform.position - this.gameObject.transform.position, displayObj.transform.forward );
         float normalDistance = this.normalDistance;
@@ -60,15 +62,22 @@ public class CaveCamera : MonoBehaviour{
         float scaledDisplayWidth = Mathf.Abs( near / displayWidth );
         float scaledDisplayHeight = Mathf.Abs( near / displayHeight );
 
-        Vector3 scaledRight = (displayScr.edgeRight - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
-        Vector3 scaledTop = (displayScr.edgeTop - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
-        Vector3 scaledLeft = (displayScr.edgeLeft - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
-        Vector3 scaledBottom = (displayScr.edgeBottom - displayObj.transform.position) * scaledDisplayWidth + displayObj.transform.position;
+        Vector3 scaledRight = (displayScr.edgeRight - displayScr.displayCenter) * scaledDisplayWidth + displayScr.displayCenter;
+        Vector3 scaledTop = (displayScr.edgeTop - displayScr.displayCenter) * scaledDisplayHeight + displayScr.displayCenter;
+        Vector3 scaledLeft = (displayScr.edgeLeft - displayScr.displayCenter) * scaledDisplayWidth + displayScr.displayCenter;
+        Vector3 scaledBottom = (displayScr.edgeBottom - displayScr.displayCenter) * scaledDisplayHeight + displayScr.displayCenter;
 
         float right = Vector3.Dot((scaledRight - this.gameObject.transform.position), displayObj.transform.right ) ;
         float left = Vector3.Dot((scaledLeft - this.gameObject.transform.position), displayObj.transform.right ) ;
         float top = Vector3.Dot((scaledTop - this.gameObject.transform.position), displayObj.transform.up );
         float bottom = Vector3.Dot((scaledBottom - this.gameObject.transform.position), displayObj.transform.up ) ;
+
+        Debug.Log( right );
+        Debug.Log( left );
+        Debug.Log( top );
+        Debug.Log( bottom );
+        Debug.Log( near );
+        Debug.Log( far );
 
         Vector3 dispUp = (displayScr.cornerUpperRight - displayScr.cornerLowerRight).normalized;
         Vector3 dispRight =  (displayScr.cornerUpperRight - displayScr.cornerUpperLeft).normalized;
@@ -99,14 +108,24 @@ public class CaveCamera : MonoBehaviour{
             displayObj.transform.rotation
         );
 
-        Matrix4x4 scaleM = Matrix4x4.Scale(
-            displayObj.transform.right * scaledDisplayWidth + displayObj.transform.up * scaledDisplayHeight
-        );
-
-        camera.nearClipPlane = near;
-        camera.farClipPlane = far;
-        camera.worldToCameraMatrix =  displayM * translationM;
-        camera.projectionMatrix = projectionM;
+        if (displayM.ValidTRS() && translationM.ValidTRS())
+        {
+            camera.worldToCameraMatrix =  displayM * translationM;
+            camera.nearClipPlane = near;
+            camera.farClipPlane = far;
+        }
+        else
+        {
+            Debug.Log("displayM or translationM are not valid");
+        }
+        //if (projectionM.ValidTRS())
+        //{
+            camera.projectionMatrix = projectionM;
+        //}
+        //else
+        //{
+        //    Debug.Log("projectionM is not valid");
+        //}
         //thisObj.transform.LookAt( displayObj.transform );
         
     }

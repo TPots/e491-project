@@ -12,23 +12,10 @@ public class CaveSetup : MonoBehaviour{
 
     public List<CaveDisplay> displayScrs;
 
-    public void init(CaveSetupTemplate caveSetupTemplate, GameObject userObj, List<GameObject> displayObjs)
+    public void init(List<GameObject> displayObjs, List<CaveDisplay> displayScrs)
     {
-
-        this.caveSetupTemplate = caveSetupTemplate;
-
-        this.userObj = userObj;
-        this.userScr = this.userObj.GetComponent<CaveUser>();
-
         this.displayObjs = displayObjs;
-
-        this.displayScrs = new List<CaveDisplay>();
-
-        foreach( GameObject displayObj in this.displayObjs )
-        {
-            this.displayScrs.Add( displayObj.GetComponent<CaveDisplay>() );
-        }
-        scrUpdate();
+        this.displayScrs = displayScrs;
     }
 
     public void OnDrawGizmos()
@@ -57,23 +44,26 @@ public class CaveSetup : MonoBehaviour{
         Gizmos.DrawLine( rootPosition + userX + userZ, rootPosition + userX + userY + userZ );
 
         Gizmos.color = Color.yellow;
+        /*
         foreach(GameObject gameObject in this.displayObjs)
         {
             displayPosition = gameObject.transform.position;
             Gizmos.DrawSphere( gameObject.transform.position, 0.25f );
             Gizmos.DrawLine( userPosition , displayPosition );
         }
+        */
     }
 
-    [ExecuteAlways]
-    private void scrUpdate()
+    public void updateScr()
     {
-
         this.gameObject.transform.position = this.caveSetupTemplate.rootObjectReference.position;
         this.gameObject.transform.rotation = Quaternion.Euler( this.caveSetupTemplate.rootObjectReference.rotation );
         this.gameObject.transform.localScale = Vector3.one * this.caveSetupTemplate.rootScale;
 
         this.userScr.caveObjectReference = this.caveSetupTemplate.userObjectReference;
+        //this.userObj.transform.position = this.userScr.caveObjectReference.position;
+        //this.userObj.transform.rotation = Quaternion.Euler( this.userScr.caveObjectReference.rotation );
+        this.userScr.updateScr();
 
         CaveDisplayTemplate[] displayArray = 
         {
@@ -91,12 +81,17 @@ public class CaveSetup : MonoBehaviour{
         {
             this.displayScrs[i].caveDisplayTemplate = displayArray[i];
             this.displayScrs[i].displayScale = this.caveSetupTemplate.rootScale; 
+            this.displayScrs[i].updateScr();
+            //this.displayObjs[i].transform.position = this.displayScrs[i].caveDisplayTemplate.caveObjectReference.position;
+            //this.displayObjs[i].transform.rotation = Quaternion.Euler( this.displayScrs[i].caveDisplayTemplate.caveObjectReference.rotation );
         }
+        /*
+        */
 
     }
 
     public void Update(){
-        scrUpdate();
+        updateScr();
     }   
 
 }

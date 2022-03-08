@@ -5,7 +5,7 @@ using UnityEngine;
 public class CaveDisplay : MonoBehaviour
 {
     public CaveDisplayTemplate caveDisplayTemplate;
-
+    public Vector3 test;
     public float displayScale;
     public Vector3 displayCenter;
     public Vector3 displayNormal;
@@ -45,35 +45,34 @@ public class CaveDisplay : MonoBehaviour
         Gizmos.DrawSphere( this.edgeBottom, 0.1f );
     }
 
-    [ExecuteInEditMode]
-    private void scrUpdate()
+    public void updateScr()
     {
-        this.gameObject.transform.localPosition = this.caveDisplayTemplate.caveObjectReference.position;
+        this.gameObject.transform.localPosition = this.caveDisplayTemplate.caveObjectReference.position;;
         this.gameObject.transform.localRotation = Quaternion.Euler( this.caveDisplayTemplate.caveObjectReference.rotation );
         this.gameObject.transform.localScale = Vector3.one;
 
         GameObject thisObj = this.gameObject;
 
-        Vector3 displayWidthOffset = thisObj.transform.rotation * new Vector3(
+        Vector3 displayWidthOffset = thisObj.transform.localRotation * new Vector3(
             this.displayScale * this.caveDisplayTemplate.displayDimentions[0]/2f,0f,0f
         );
 
-        Vector3 displayHeightOffset = thisObj.transform.rotation * new Vector3(
+        Vector3 displayHeightOffset = thisObj.transform.localRotation * new Vector3(
             0f,this.displayScale * this.caveDisplayTemplate.displayDimentions[1]/2f,0f
         );
 
-        this.displayCenter = thisObj.transform.position;
+        this.displayCenter = this.gameObject.transform.position;
         this.displayNormal = thisObj.transform.forward;
 
-        this.cornerUpperRight =  thisObj.transform.position + displayWidthOffset + displayHeightOffset;
-        this.cornerUpperLeft = thisObj.transform.position - displayWidthOffset + displayHeightOffset;
-        this.cornerLowerLeft =  thisObj.transform.position - displayWidthOffset - displayHeightOffset;
-        this.cornerLowerRight =  thisObj.transform.position + displayWidthOffset - displayHeightOffset;
+        this.cornerUpperRight =  this.displayCenter + displayWidthOffset + displayHeightOffset;
+        this.cornerUpperLeft = this.displayCenter - displayWidthOffset + displayHeightOffset;
+        this.cornerLowerLeft =  this.displayCenter - displayWidthOffset - displayHeightOffset;
+        this.cornerLowerRight =  this.displayCenter + displayWidthOffset - displayHeightOffset;
 
-        this.edgeRight = thisObj.transform.position + displayWidthOffset;
-        this.edgeTop = thisObj.transform.position + displayHeightOffset;
-        this.edgeLeft = thisObj.transform.position - displayWidthOffset;
-        this.edgeBottom = thisObj.transform.position - displayHeightOffset;
+        this.edgeRight = this.displayCenter + displayWidthOffset;
+        this.edgeTop = this.displayCenter + displayHeightOffset;
+        this.edgeLeft = this.displayCenter - displayWidthOffset;
+        this.edgeBottom = this.displayCenter - displayHeightOffset;
 
         this.minimumNormalHorizontal = this.caveDisplayTemplate.displayDimentions[0] * (0.5f / Mathf.Tan( 67.5f * Mathf.PI / 180f ) ) ;
         this.minimumNormalVertical =  this.minimumNormalHorizontal * 0.5f;
@@ -81,12 +80,12 @@ public class CaveDisplay : MonoBehaviour
 
     void Start()
     {
-        scrUpdate();
+        //scrUpdate();
     }
 
     // Update is called once per frame
     void Update()
     {
-        scrUpdate();
+        //scrUpdate();
     }
 }

@@ -116,18 +116,16 @@ public class CaveSetupWindow : EditorWindow
         CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
 
         setupScr.caveSetupTemplate = caveSetupTemplate;
+        setupObj.transform.position = caveSetupTemplate.rootObjectReference.position;
+        setupObj.transform.rotation = Quaternion.Euler( caveSetupTemplate.rootObjectReference.rotation );
 
-        GameObject userObj = new GameObject( "user" );
-        userObj.AddComponent<CaveUser>();
-        CaveUser userScr = userObj.GetComponent<CaveUser>();
+        GameObject userObj = GenerateUser( caveSetupTemplate.userObjectReference, setupObj );
 
-        userObj.transform.SetParent( setupObj.transform );
-        userObj.transform.localPosition = Vector3.zero;
-        userObj.transform.localRotation = Quaternion.Euler( Vector3.zero );
-        userObj.transform.localScale = Vector3.one;
-
+        setupScr.userObj = userObj;
+        setupScr.userScr = userObj.GetComponent<CaveUser>();
+        
         List<GameObject> displayObj = new List<GameObject>();
-
+        List<CaveDisplay> displayScr = new List<CaveDisplay>();
         CaveDisplayTemplate[] displayArray = 
         {
             caveSetupTemplate.display1,
@@ -142,29 +140,14 @@ public class CaveSetupWindow : EditorWindow
 
         for(int i = 0 ; i < caveSetupTemplate.numberOfDisplays ; i++ )
         {
-            GameObject newDisplay = new GameObject( displayArray[i].tag );
-            newDisplay.transform.SetParent( setupObj.transform );
-            newDisplay.transform.localPosition = Vector3.zero;
-            newDisplay.transform.localRotation = Quaternion.Euler( Vector3.zero );
-            newDisplay.transform.localScale = Vector3.one;
-            newDisplay.AddComponent<CaveDisplay>();
-
-            GameObject newCamera = new GameObject( "Camera-" + i.ToString() );
-            newCamera.transform.SetParent( userObj.transform );
-            newCamera.transform.localPosition = Vector3.zero;
-            newCamera.transform.localRotation = Quaternion.Euler( Vector3.zero );
-            newCamera.transform.localScale = Vector3.one;
-            newCamera.AddComponent<CaveCamera>();
-            newCamera.AddComponent<Camera>();
-            
-            CaveCamera cameraScr = newCamera.GetComponent<CaveCamera>();
-            cameraScr.displayObject = newDisplay;
-
-
-            displayObj.Add( newDisplay );
+            GameObject dispObj = GenerateDisplay( displayArray[i], setupObj, caveSetupTemplate.rootScale );
+            GameObject camObj = GenerateCamera( userObj, dispObj );
+            displayObj.Add( dispObj );
+            displayScr.Add( dispObj.GetComponent<CaveDisplay>() );
         } 
 
-        setupScr.init(caveSetupTemplate, userObj, displayObj);
+        setupScr.init(displayObj, displayScr);
+        setupScr.updateScr();
     }
 
     private void SanitizeProject(string label){
@@ -174,6 +157,52 @@ public class CaveSetupWindow : EditorWindow
         if (existingObj == null) return;
         Debug.Log("Found existing GameObject with matching label. Destroying ...");
         DestroyImmediate(existingObj);
+    }
+
+    private GameObject GenerateUser(CaveObjectReference userObjectReference, GameObject setupObj)
+    {
+        GameObject userObj = new GameObject( "user");
+        userObj.transform.SetParent( setupObj.transform );
+        userObj.AddComponent<CaveUser>();
+        CaveUser userScr = userObj.GetComponent<CaveUser>();
+        userScr.caveObjectReference = userObjectReference;
+        userScr.updateScr();
+        return userObj;
+    }
+
+    private GameObject GenerateCamera( GameObject userObj, GameObject displayObj )
+    {
+        CaveDisplay displayScr = displayObj.GetComponent<CaveDisplay>();
+
+        GameObject camObj = new GameObject("camera-" + displayScr.caveDisplayTemplate.tag);
+        camObj.transform.SetParent( userObj.transform );
+        camObj.transform.localPosition = Vector3.zero;
+        camObj.transform.localRotation = Quaternion.Euler( Vector3.zero );
+        camObj.transform.localScale = Vector3.one;
+
+        camObj.AddComponent<CaveCamera>();
+        CaveCamera camScr = camObj.GetComponent<CaveCamera>();
+
+        camScr.displayObject = displayObj;
+        camScr.displayScr = displayScr;
+
+        camObj.AddComponent<Camera>();
+
+        camScr.updateScr();
+        return camObj;
+    }
+
+    private GameObject GenerateDisplay( CaveDisplayTemplate caveDisplayTemplate, GameObject setupObj, float rootScale )
+    {
+        GameObject dispObj = new GameObject( "display-" + caveDisplayTemplate.tag );
+        dispObj.transform.SetParent( setupObj.transform );
+        dispObj.AddComponent<CaveDisplay>();
+        CaveDisplay dispScr = dispObj.GetComponent<CaveDisplay>();
+
+        dispScr.caveDisplayTemplate = caveDisplayTemplate;
+        dispScr.displayScale = rootScale;
+        dispScr.updateScr();
+        return dispObj;
     }
 
     private void RandomizeDisplays(CaveSetupTemplate caveSetupTemplate){

@@ -4,8 +4,7 @@ public class CaveUser : MonoBehaviour{
     
     public CaveObjectReference caveObjectReference;
 
-    [ExecuteAlways]
-    private void scrUpdate()
+    public void updateScr()
     {
         this.gameObject.transform.localPosition = this.caveObjectReference.position;
         this.gameObject.transform.localRotation = Quaternion.Euler( this.caveObjectReference.rotation );
@@ -14,11 +13,11 @@ public class CaveUser : MonoBehaviour{
 
     void Update()
     {
-        scrUpdate();
+        //scrUpdate();
     }
 
     void Start()
     {
-        scrUpdate();
+        //scrUpdate();
     }
 }
