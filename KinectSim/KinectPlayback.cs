@@ -17,10 +17,18 @@ namespace KinectSim
             // set up error logs
             Trace.Listeners.Add(new TextWriterTraceListener("traceErrors.log"));
             Trace.AutoFlush = true;
-
+            Trace.WriteLine("-----START OF ERROR LOG-----");
 
             // initialize server at port 12345
             KinectZMQ.ZMQServer server = new KinectZMQ.ZMQServer(12345);
+
+            // check Body Tracking runtime was included properly
+            if(!Sdk.IsBodyTrackingRuntimeAvailable(out string message))
+            {
+                Trace.Write("Body Tracking runtime is not available.");
+                Trace.Write(message);
+                return;
+            }
 
             // get the name of the recording from the console
             Console.WriteLine("Enter the name of the recording: ");
@@ -31,6 +39,7 @@ namespace KinectSim
                 // open playback
                 using (Playback playback = new Playback(filename))
                 {
+                    Console.WriteLine("Recording opened for playback.");
                     var length = playback.RecordLength;
 
                     // setup tracker based on recording
@@ -39,6 +48,8 @@ namespace KinectSim
 
                     using (Tracker tracker = new Tracker(calibration, trackerConfiguration))
                     {
+                        Console.WriteLine("Tracker initialized.");
+
                         // while frame still available
                         while (playback.TryGetNextCapture(out Capture capture))
                         {
@@ -67,7 +78,10 @@ namespace KinectSim
                                     eyeRight.Orientation.Z,
                                     eyeRight.Orientation.W
                                 );
-                                server.PublishData(Vector3(eyeRight.PositionMm), quaternion);
+                                server.PublishData(
+                                    new Vector3(eyeRight.PositionMm.X, eyeRight.PositionMm.Y, eyeRight.PositionMm.Z), 
+                                    quaternion
+                                );
                             }
                         }
 
@@ -77,14 +91,8 @@ namespace KinectSim
             }
             catch (Exception ex)
             {
-                Trace.WriteLine("-----START OF ERROR LOG-----");
                 Trace.WriteLine(ex);
             }
-        }
-
-        private static Vector3 Vector3(Float3 positionMm)
-        {
-            throw new NotImplementedException();
         }
     }
 }

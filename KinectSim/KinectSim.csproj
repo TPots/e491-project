@@ -81,6 +81,12 @@
     <Reference Include="K4AdotNet, Version=1.4.13.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\KinectZMQ\packages\K4AdotNet.1.4.13\lib\net461\K4AdotNet.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Azure.Kinect.BodyTracking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=10a7881b780be99e, processorArchitecture=AMD64">
+      <HintPath>..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.1.1.1\lib\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Azure.Kinect.Sensor, Version=1.4.1.0, Culture=neutral, PublicKeyToken=6f6471c4ba98fac7, processorArchitecture=MSIL">
+      <HintPath>..\KinectZMQ\packages\Microsoft.Azure.Kinect.Sensor.1.4.1\lib\netstandard2.0\Microsoft.Azure.Kinect.Sensor.dll</HintPath>
+    </Reference>
     <Reference Include="NaCl, Version=0.1.13.0, Culture=neutral, PublicKeyToken=827c20e50a9775fa, processorArchitecture=MSIL">
       <HintPath>..\KinectZMQ\packages\NaCl.Net.0.1.13\lib\net472\NaCl.dll</HintPath>
     </Reference>
@@ -102,8 +108,8 @@
       <HintPath>..\KinectZMQ\packages\System.Memory.4.5.3\lib\netstandard2.0\System.Memory.dll</HintPath>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\KinectZMQ\packages\System.Numerics.Vectors.4.4.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\KinectZMQ\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\KinectZMQ\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
@@ -131,6 +137,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="dnn_model_2_0_lite_op11.onnx" />
+    <None Include="dnn_model_2_0_op11.onnx" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -140,5 +148,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\KinectZMQ\packages\K4AdotNet.1.4.13\build\k4adotnet.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\KinectZMQ\packages\K4AdotNet.1.4.13\build\k4adotnet.targets'))" />
+    <Error Condition="!Exists('..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets'))" />
+    <Error Condition="!Exists('..\KinectZMQ\packages\Microsoft.Azure.Kinect.Sensor.1.4.1\build\netstandard2.0\Microsoft.Azure.Kinect.Sensor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\KinectZMQ\packages\Microsoft.Azure.Kinect.Sensor.1.4.1\build\netstandard2.0\Microsoft.Azure.Kinect.Sensor.targets'))" />
+    <Error Condition="!Exists('..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.1.1.1\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.1.1.1\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.targets'))" />
   </Target>
+  <Import Project="..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets" Condition="Exists('..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.1.10.0\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.ONNXRuntime.targets')" />
+  <Import Project="..\KinectZMQ\packages\Microsoft.Azure.Kinect.Sensor.1.4.1\build\netstandard2.0\Microsoft.Azure.Kinect.Sensor.targets" Condition="Exists('..\KinectZMQ\packages\Microsoft.Azure.Kinect.Sensor.1.4.1\build\netstandard2.0\Microsoft.Azure.Kinect.Sensor.targets')" />
+  <Import Project="..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.1.1.1\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.targets" Condition="Exists('..\KinectZMQ\packages\Microsoft.Azure.Kinect.BodyTracking.1.1.1\build\netstandard2.0\Microsoft.Azure.Kinect.BodyTracking.targets')" />
 </Project>
