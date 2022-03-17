@@ -123,9 +123,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\KinectZMQ\ZMQServer.cs">
+      <Link>ZMQServer.cs</Link>
+    </Compile>
     <Compile Include="KinectPlayback.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ZMQServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
