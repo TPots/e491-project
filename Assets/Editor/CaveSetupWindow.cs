@@ -146,7 +146,7 @@ public class CaveSetupWindow : EditorWindow
         for(int i = 0 ; i < caveSetupTemplate.numberOfDisplays ; i++ )
         {
             GameObject dispObj = GenerateDisplay( displayArray[i], setupObj, caveSetupTemplate.rootScale );
-            GameObject camObj = GenerateCamera( userObj, dispObj );
+            GameObject camObj = GenerateCamera( userObj, dispObj, i );
             displayObj.Add( dispObj );
             displayScr.Add( dispObj.GetComponent<CaveDisplay>() );
         } 
@@ -175,7 +175,7 @@ public class CaveSetupWindow : EditorWindow
         return userObj;
     }
 
-    private GameObject GenerateCamera( GameObject userObj, GameObject displayObj )
+    private GameObject GenerateCamera( GameObject userObj, GameObject displayObj, int cameraIdx )
     {
         CaveDisplay displayScr = displayObj.GetComponent<CaveDisplay>();
 
@@ -192,6 +192,9 @@ public class CaveSetupWindow : EditorWindow
         camScr.displayScr = displayScr;
 
         camObj.AddComponent<Camera>();
+        Camera cam = camObj.GetComponent<Camera>();
+        cam.targetDisplay = cameraIdx;
+        //Display.displays[ cameraIdx ].Activate();
 
         camScr.updateScr();
         return camObj;
