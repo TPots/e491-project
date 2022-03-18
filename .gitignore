@@ -7,14 +7,13 @@ Logs/
 Packages/
 ProjectSettings/
 UserSettings/
+Temp/
 .vscode/
 *.asset
 *.meta
 .DS_Store
 *.brush
-*.png
 *.sln
-*.prefab
 *.terrainlayer
 
 

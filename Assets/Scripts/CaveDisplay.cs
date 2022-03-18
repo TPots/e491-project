@@ -19,6 +19,7 @@ public class CaveDisplay : MonoBehaviour
     public Vector3 edgeBottom;
     public float minimumNormalHorizontal;
     public float minimumNormalVertical;
+    public GameObject alignmentStructure;
 
     [ExecuteInEditMode]
     public void OnDrawGizmos(){
@@ -76,6 +77,8 @@ public class CaveDisplay : MonoBehaviour
 
         this.minimumNormalHorizontal = this.caveDisplayTemplate.displayDimentions[0] * (0.5f / Mathf.Tan( 67.5f * Mathf.PI / 180f ) ) ;
         this.minimumNormalVertical =  this.minimumNormalHorizontal * 0.5f;
+
+        if (this.caveDisplayTemplate.enableAlignmentStructure == true){ this.alignmentStructure.SetActive(true); } else{ this.alignmentStructure.SetActive(false); }
     }
 
     void Start()
