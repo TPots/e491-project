@@ -9,6 +9,8 @@ public class CaveCamera : MonoBehaviour{
 
     public float normalDistance;
 
+    public Matrix4x4 projectionM;
+
     public void updateScr()
     {
         CalculateProjectionMatrix();
@@ -83,7 +85,7 @@ public class CaveCamera : MonoBehaviour{
         Vector3 dispRight =  (displayScr.cornerUpperRight - displayScr.cornerUpperLeft).normalized;
         Vector3 dispForward = - Vector3.Cross( dispRight, dispUp );
 
-        Matrix4x4 projectionM = Matrix4x4.Frustum(left,right,bottom,top,near,far);
+        this.projectionM = Matrix4x4.Frustum(left,right,bottom,top,near,far);
     
         Matrix4x4 displayM = Matrix4x4.zero;
         displayM[0,0] = dispRight.x;
@@ -118,15 +120,8 @@ public class CaveCamera : MonoBehaviour{
         {
             Debug.Log("displayM or translationM are not valid");
         }
-        //if (projectionM.ValidTRS())
-        //{
-            camera.projectionMatrix = projectionM;
-        //}
-        //else
-        //{
-        //    Debug.Log("projectionM is not valid");
-        //}
-        //thisObj.transform.LookAt( displayObj.transform );
+
+        camera.projectionMatrix = projectionM;
         
     }
 

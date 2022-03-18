@@ -8,13 +8,13 @@ Logs/
 Packages/
 ProjectSettings/
 UserSettings/
+Temp/
 .vscode/
 *.asset
 *.meta
 .DS_Store
 *.brush
-*.png
-*.prefab
+*.sln
 *.terrainlayer
 
 ## Ignore Visual Studio temporary files, build results, and
