@@ -15,34 +15,7 @@ public class CaveCamera : MonoBehaviour{
     {
         CalculateProjectionMatrix();
     }
-    /*
-    public void OnDrawGizmos()
-    {
-        GameObject thisObj = this.gameObject;
-        GameObject userObj = this.userObject;
 
-        Gizmos.color = Color.white;
-        Gizmos.DrawLine(  userObj.transform.position, userObj.transform.position + this.userToDisplay );
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine( 
-            userObj.transform.position,
-            userObj.transform.position + new Vector3( this.userToDisplay[0], 0f, 0f )
-        );
-
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine( 
-            userObj.transform.position + new Vector3( this.userToDisplay[0], 0f, 0f ),
-            userObj.transform.position + new Vector3( this.userToDisplay[0], 0f, this.userToDisplay[2] )
-        );
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine( 
-            userObj.transform.position + new Vector3( this.userToDisplay[0], 0f, this.userToDisplay[2] ),
-            userObj.transform.position + this.userToDisplay
-        );
-    }
-    */
     public void CalculateProjectionMatrix()
     {
         GameObject displayObj = this.displayObject;
@@ -73,13 +46,6 @@ public class CaveCamera : MonoBehaviour{
         float left = Vector3.Dot((scaledLeft - this.gameObject.transform.position), displayObj.transform.right ) ;
         float top = Vector3.Dot((scaledTop - this.gameObject.transform.position), displayObj.transform.up );
         float bottom = Vector3.Dot((scaledBottom - this.gameObject.transform.position), displayObj.transform.up ) ;
-
-        Debug.Log( right );
-        Debug.Log( left );
-        Debug.Log( top );
-        Debug.Log( bottom );
-        Debug.Log( near );
-        Debug.Log( far );
 
         Vector3 dispUp = (displayScr.cornerUpperRight - displayScr.cornerLowerRight).normalized;
         Vector3 dispRight =  (displayScr.cornerUpperRight - displayScr.cornerUpperLeft).normalized;

@@ -5,13 +5,9 @@ using System.Collections.Generic;
 public class CaveSetup : MonoBehaviour{
     public CaveSetupTemplate caveSetupTemplate;
     public GameObject userObj;
-
     public CaveUser userScr;
-
     public List<GameObject> displayObjs;
-
     public List<CaveDisplay> displayScrs;
-
     public void init(List<GameObject> displayObjs, List<CaveDisplay> displayScrs)
     {
         this.displayObjs = displayObjs;
@@ -44,14 +40,6 @@ public class CaveSetup : MonoBehaviour{
         Gizmos.DrawLine( rootPosition + userX + userZ, rootPosition + userX + userY + userZ );
 
         Gizmos.color = Color.yellow;
-        /*
-        foreach(GameObject gameObject in this.displayObjs)
-        {
-            displayPosition = gameObject.transform.position;
-            Gizmos.DrawSphere( gameObject.transform.position, 0.25f );
-            Gizmos.DrawLine( userPosition , displayPosition );
-        }
-        */
     }
 
     public void updateScr()
@@ -61,8 +49,6 @@ public class CaveSetup : MonoBehaviour{
         this.gameObject.transform.localScale = Vector3.one * this.caveSetupTemplate.rootScale;
 
         this.userScr.caveObjectReference = this.caveSetupTemplate.userObjectReference;
-        //this.userObj.transform.position = this.userScr.caveObjectReference.position;
-        //this.userObj.transform.rotation = Quaternion.Euler( this.userScr.caveObjectReference.rotation );
         this.userScr.updateScr();
 
         CaveDisplayTemplate[] displayArray = 
@@ -82,16 +68,20 @@ public class CaveSetup : MonoBehaviour{
             this.displayScrs[i].caveDisplayTemplate = displayArray[i];
             this.displayScrs[i].displayScale = this.caveSetupTemplate.rootScale; 
             this.displayScrs[i].updateScr();
-            //this.displayObjs[i].transform.position = this.displayScrs[i].caveDisplayTemplate.caveObjectReference.position;
-            //this.displayObjs[i].transform.rotation = Quaternion.Euler( this.displayScrs[i].caveDisplayTemplate.caveObjectReference.rotation );
-        }
-        /*
-        */
 
+        }
     }
 
-    public void Update(){
+    public void Start()
+    {
+        for( int i = 0 ; i < Display.displays.Length ; i++ )
+        {
+            Display.displays[i].Activate();
+        }
+    }
+
+    public void Update()
+    {
         updateScr();
     }   
-
 }
