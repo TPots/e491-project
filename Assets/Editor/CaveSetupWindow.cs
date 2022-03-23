@@ -254,6 +254,19 @@ public class CaveSetupWindow : EditorWindow
         return alignmentStructure;
     }
 
+    private void GenerateZMQ( GameObject setupObj )
+    {
+        GameObject zmq = new GameObject("ZMQ");
+        zmp.transform.setParent( setupObj.transform );
+
+        CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
+
+        zmq.AddComponent<UserTracker>();
+        UserTracker ut = zmp.GetComponent<UserTracker>();
+        ut.setupObj = setupObj;
+        ut.setupScr = setupScr;
+    }
+
     private void RandomizeDisplays(CaveSetupTemplate caveSetupTemplate){
         var seed = new System.Random();
         CaveDisplayTemplate[] displayArray =  {
