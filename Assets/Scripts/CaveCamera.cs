@@ -22,7 +22,7 @@ public class CaveCamera : MonoBehaviour{
         CaveDisplay displayScr = this.displayScr;
         Camera camera = this.gameObject.GetComponent<Camera>();
 
-        Debug.Log( this.gameObject.transform.position );
+        //Debug.Log( this.gameObject.transform.position );
 
         this.normalDistance = Vector3.Dot( displayObj.transform.position - this.gameObject.transform.position, displayObj.transform.forward );
         float normalDistance = this.normalDistance;

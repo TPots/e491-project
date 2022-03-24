@@ -123,7 +123,7 @@ public class CaveSetupWindow : EditorWindow
         setupScr.caveSetupTemplate = caveSetupTemplate;
         setupObj.transform.position = caveSetupTemplate.rootObjectReference.position;
         setupObj.transform.rotation = Quaternion.Euler( caveSetupTemplate.rootObjectReference.rotation );
-
+        GenerateZMQ( setupObj );
         GameObject userObj = GenerateUser( caveSetupTemplate.userObjectReference, setupObj );
 
         setupScr.userObj = userObj;
@@ -257,12 +257,12 @@ public class CaveSetupWindow : EditorWindow
     private void GenerateZMQ( GameObject setupObj )
     {
         GameObject zmq = new GameObject("ZMQ");
-        zmp.transform.setParent( setupObj.transform );
+        zmq.transform.SetParent( setupObj.transform );
 
         CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
 
-        zmq.AddComponent<UserTracker>();
-        UserTracker ut = zmp.GetComponent<UserTracker>();
+        zmq.AddComponent<PubSub.UserTracker>();
+        PubSub.UserTracker ut = zmq.GetComponent<PubSub.UserTracker>();
         ut.setupObj = setupObj;
         ut.setupScr = setupScr;
     }

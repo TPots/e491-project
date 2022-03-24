@@ -48,6 +48,7 @@ namespace KinectZMQ
             Orientation orient = new Orientation {pos = pos, quat = quat};
 
             string msg = Newtonsoft.Json.JsonConvert.SerializeObject(orient);
+            Console.WriteLine(msg);
             this.pubSocket.SendFrame(msg);
             Thread.Sleep(1);
         }
