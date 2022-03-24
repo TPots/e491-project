@@ -107,7 +107,7 @@ namespace PubSub {
                     
                     orientation_queue.Enqueue(orientation);
                     add_value_to_average(orientation);
-                        user_pos.x = queue_average.pos.x/factor;
+                        user_pos.x = queue_average.pos.x/-factor;
                         user_pos.y = queue_average.pos.y/-factor;
                         user_pos.z = queue_average.pos.z/-factor;
                         user_rot.x = queue_average.quat.x/factor;
