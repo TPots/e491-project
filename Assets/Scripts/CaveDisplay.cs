@@ -17,6 +17,9 @@ public class CaveDisplay : MonoBehaviour
     public Vector3 edgeTop;
     public Vector3 edgeLeft;
     public Vector3 edgeBottom;
+
+    public float halfWidth;
+    public float halfHeight;
     public float minimumNormalHorizontal;
     public float minimumNormalVertical;
     public GameObject alignmentStructure;
@@ -77,6 +80,10 @@ public class CaveDisplay : MonoBehaviour
 
         this.minimumNormalHorizontal = this.caveDisplayTemplate.displayDimentions[0] * (0.5f / Mathf.Tan( 67.5f * Mathf.PI / 180f ) ) ;
         this.minimumNormalVertical =  this.minimumNormalHorizontal * 0.5f;
+
+        this.halfWidth = this.caveDisplayTemplate.displayDimentions[0] *0.5f;
+        this.halfHeight = this.caveDisplayTemplate.displayDimentions[1] *0.5f;
+
 
         if (this.caveDisplayTemplate.enableAlignmentStructure == true){ this.alignmentStructure.SetActive(true); } else{ this.alignmentStructure.SetActive(false); }
     }

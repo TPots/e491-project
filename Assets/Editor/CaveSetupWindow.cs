@@ -190,6 +190,7 @@ public class CaveSetupWindow : EditorWindow
 
         camScr.displayObject = displayObj;
         camScr.displayScr = displayScr;
+        camScr.camIdx = cameraIdx;
 
         camObj.AddComponent<Camera>();
         Camera cam = camObj.GetComponent<Camera>();

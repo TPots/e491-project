@@ -32,7 +32,7 @@ namespace PubSub {
         }
         [SerializeField] private string host;
         [SerializeField] private string port;
-        [SerializeField] public float factor = 100; 
+       // [SerializeField] public float factor = 100; 
 
         private Orientation orientation;
         private Vector3 user_pos;
@@ -41,7 +41,7 @@ namespace PubSub {
 
 
         private Queue<Orientation> orientation_queue;
-        private int orientation_max_size = 3;
+        private int orientation_max_size = 5;
         private Orientation queue_average;
          
         public GameObject setupObj;
@@ -90,9 +90,10 @@ namespace PubSub {
         // Update is called once per frame
         private void Update()
         {
+            int factor = 1000;
             if (subSocket.TryReceiveFrameString(out var message)){
-                    Debug.Log("Recieved Data");
-                    Debug.Log(message);
+                    //Debug.Log("Recieved Data");
+                    //Debug.Log(message);
                     try{ 
                         orientation = JsonUtility.FromJson<Orientation>(message);
                     
@@ -114,9 +115,9 @@ namespace PubSub {
                         user_rot.y = queue_average.quat.y/factor;
                         user_rot.z = queue_average.quat.z/factor;
                         user_rot.w = queue_average.quat.w/factor;
-                    Debug.Log(queue_average.pos.x);
-                    Debug.Log(queue_average.pos.y);
-                    Debug.Log(queue_average.pos.z);
+                    // Debug.Log(queue_average.pos.x);
+                    // Debug.Log(queue_average.pos.y);
+                    // Debug.Log(queue_average.pos.z);
                 }
                     catch{
                         Debug.Log($"Failed to Parse Message: {message}");
