@@ -14,116 +14,53 @@ public class CaveCamera : MonoBehaviour{
 
     public void updateScr()
     {
-        ///CalculateProjectionMatrix();
-        //getAsymProjMatrix(LowerLeft, LowerRight,UpperLeft,this.transform.position,0.01f,100.0f);
-        //Debug.Log ("Display " + this.camIdx + ", upperLeft:" + this.displayScr.cornerUpperLeft);
-        getAsymProjMatrix(this.displayScr.cornerLowerLeft, this.displayScr.cornerLowerRight, this.displayScr.cornerUpperLeft,this.transform.position,0.02f,120.0f);
+
+        //getAsymProjMatrix(this.displayScr.cornerLowerLeft, this.displayScr.cornerLowerRight, this.displayScr.cornerUpperLeft,this.transform.position,0.01f,100.0f);
+
+        generalizedPerspectiveProjection();
     }
 
-    /// <summary>
-        /// Upper right (quadrant 1) corner world space coordinate
-        /// </summary>
-        public Vector3 UpperRight
-        {
-            get
-            {
-                return this.displayScr.transform.localToWorldMatrix * new Vector4(this.displayScr.halfWidth, this.displayScr.halfHeight, 0.0f, 1.0f);
-            }
-        }
 
-        /// <summary>
-        /// Upper left (quadrant 2) corner world space coordinate
-        /// </summary>
-        public Vector3 UpperLeft
-        {
-            get
-            {
-                return this.displayScr.transform.localToWorldMatrix * new Vector4(-this.displayScr.halfWidth, this.displayScr.halfHeight, 0.0f, 1.0f);
-            }
-        }
+    // http://160592857366.free.fr/joe/ebooks/ShareData/Generalized%20Perspective%20Projection.pdf - Paper by Robert Kooima
+    public void generalizedPerspectiveProjection(){
+    Camera _camera = this.gameObject.GetComponent<Camera>();
+    float n = 0.01f;
+    float f = 100.0f;
+    n = _camera.nearClipPlane;
+    f = _camera.farClipPlane;
 
-        /// <summary>
-        /// Lower left (quadrant 3) corner world space coordinate
-        /// </summary>
-        public Vector3 LowerLeft
-        {
-            get
-            {
-                return this.displayScr.transform.localToWorldMatrix * new Vector4(-this.displayScr.halfWidth, -this.displayScr.halfHeight, 0.0f, 1.0f);
-            }
-        }
+    // Display corners
+    Vector3 pa = this.displayScr.cornerLowerLeft; 
+    Vector3 pb = this.displayScr.cornerLowerRight;
+    Vector3 pc = this.displayScr.cornerUpperLeft;
+    Vector3 pe = this.transform.position;
 
-        /// <summary>
-        /// Lower right (quadrant 4) corner world space coordinate
-        /// </summary>
-        public Vector3 LowerRight
-        {
-            get
-            {
-                return this.displayScr.transform.localToWorldMatrix * new Vector4(this.displayScr.halfWidth, -this.displayScr.halfHeight, 0.0f, 1.0f);
-            }
-        }
 
-        /// <summary>
-        /// Return the matrix projecting from from, through the quad specified
-        /// </summary>
-        /// <param name="lowerLeft">lower left point of quad</param>
-        /// <param name="lowerRight">lower right point of quad</param>
-        /// <param name="upperLeft">upper left point of quad</param>
-        /// <param name="from">position of the eye</param>
-        /// <param name="ncp">near clip plane</param>
-        /// <param name="fcp">far clip plane</param>
-        /// <returns></returns>
-        public Matrix4x4 getAsymProjMatrix(Vector3 lowerLeft, Vector3 lowerRight, Vector3 upperLeft, Vector3 from, float ncp, float fcp)
-        {
-            //compute orthonormal basis for the screen - could pre-compute this...
-            Vector3 vr = (lowerRight - lowerLeft).normalized;
-            Vector3 vu = (upperLeft - lowerLeft).normalized;
-            Vector3 vn = Vector3.Cross(vr, vu).normalized;
+    // Compute an orthonormal basis for the screen.
+    Vector3 vr = (pb - pa).normalized;
+    Vector3 vu = (pc - pa).normalized;
+    Vector3 vn = Vector3.Cross(vu, vr).normalized;
+    // Compute the screen corner vectors.
+    Vector3 va = pa - pe;
+    Vector3 vb = pb - pe;
+    Vector3 vc = pc - pe;
+    // Find the distance from the eye to screen plane.
+    float d = -Vector3.Dot(va, vn);
 
-            //compute screen corner vectors
-            Vector3 va = lowerLeft - from;
-            Vector3 vb = lowerRight - from;
-            Vector3 vc = upperLeft - from;
+    // Find the extent of the perpendicular projection. 
+    //float nd = n / d;
+    float nd = 1.0f;
 
-            //find the distance from the eye to screen plane
-            float n = ncp;
-            float f = fcp;
-            float d = Vector3.Dot(va, vn); // distance from eye to screen
-            float nod = n / d;
-            float l = Vector3.Dot(vr, va) * nod;
-            float r = Vector3.Dot(vr, vb) * nod;
-            float b = Vector3.Dot(vu, va) * nod;
-            float t = Vector3.Dot(vu, vc) * nod;
-
-            //put together the matrix - bout time amirite?
-            Matrix4x4 m = Matrix4x4.zero;
-
-            //from http://forum.unity3d.com/threads/using-projection-matrix-to-create-holographic-effect.291123/
-            // m[0, 0] = 2.0f * n / (r - l);
-            // m[0, 2] = (r + l) / (r - l);
-            // m[1, 1] = 2.0f * n / (t - b);
-            // m[1, 2] = (t + b) / (t - b);
-            // m[2, 2] = -(f + n) / (f - n);
-            // m[2, 3] = ((-2.0f * f * n) / (f - n));
-            // m[3, 2] = -1.0f;
-            
-            m[0, 0] = 2.0f * n / (r - l);
-            m[0, 2] = (r + l) / (r - l);
-            m[1, 1] = 2.0f * n / (t - b);
-            m[1, 2] = (t + b) / (t - b);
-            m[2, 2] = (f + n) / (n-f);
-            m[2, 3] = ((2.0f * f * n) / (n - f));
-            m[3, 2] = -1.0f;
-            
-            Camera camera = this.gameObject.GetComponent<Camera>();
-
-            camera.nearClipPlane = ncp;
-            camera.farClipPlane = fcp;
-            camera.projectionMatrix = m;
-
-            return m;
-        }
+    float l = Vector3.Dot(vr, va) * nd;
+    float r = Vector3.Dot(vr, vb) * nd;
+    float b = Vector3.Dot(vu, va) * nd;
+    float t = Vector3.Dot(vu, vc) * nd;
+    // Load the perpendicular projection.
+    _camera.projectionMatrix = Matrix4x4.Frustum(l, r, b, t, n, f);
+    _camera.transform.rotation = Quaternion.LookRotation(-vn, vu);
+    }
+    
+    
     public void CalculateProjectionMatrix()
     {
         GameObject displayObj = this.displayObject;
