@@ -17,7 +17,11 @@ namespace KinectSim
             // set up error logs
             Trace.Listeners.Add(new TextWriterTraceListener("traceErrors.log"));
             Trace.AutoFlush = true;
-            Trace.WriteLine("-----START OF ERROR LOG-----");
+            var dateTime = DateTime.Now;
+            Trace.WriteLine("-----START OF ERROR LOG" + dateTime.ToString() + "-----");
+
+            // set flags
+            bool verbose = false;
 
             // initialize server at port 12345
             KinectZMQ.ZMQServer server = new KinectZMQ.ZMQServer(12345);
@@ -43,12 +47,18 @@ namespace KinectSim
                     var length = playback.RecordLength;
 
                     // setup tracker based on recording
+                    // By default, uses GPU to process tracker
                     TrackerConfiguration trackerConfiguration = new TrackerConfiguration();
                     playback.GetCalibration(out Calibration calibration);
+                    if (verbose) { Console.WriteLine($"Recording frame rate: ")}
 
                     using (Tracker tracker = new Tracker(calibration, trackerConfiguration))
                     {
                         Console.WriteLine("Tracker initialized.");
+
+                        // Start timing
+                        double totalFrameCount = 0.0;
+                        Stopwatch stopwatch = Stopwatch.StartNew();
 
                         // while frame still available
                         while (playback.TryGetNextCapture(out Capture capture))
@@ -62,6 +72,10 @@ namespace KinectSim
                             // get latest tracker frame with infinite timeout
                             using (BodyFrame frame = tracker.PopResult())
                             {
+                                // add to frame count regardless of number of bodies
+                                totalFrameCount++;
+
+                                // only process if one body in frame
                                 if (frame.BodyCount != 1)
                                 {
                                     continue;
@@ -71,21 +85,42 @@ namespace KinectSim
 
                                 Joint eyeRight = skeleton.EyeRight;
                                 Joint eyeLeft = skeleton.EyeLeft;
-                                // convert K4AdotNet.Quaternion to System.Numerics.Quaternion
-                                System.Numerics.Quaternion quaternion = new System.Numerics.Quaternion(
-                                    eyeRight.Orientation.X,
-                                    eyeRight.Orientation.Y,
-                                    eyeRight.Orientation.Z,
-                                    eyeRight.Orientation.W
-                                );
+                                
+                                var positionData = new Vector3(eyeRight.PositionMm.X, eyeRight.PositionMm.Y, eyeRight.PositionMm.Z);
                                 server.PublishData(
-                                    new Vector3(eyeRight.PositionMm.X, eyeRight.PositionMm.Y, eyeRight.PositionMm.Z), 
-                                    quaternion
+                                    positionData,
+                                    // convert K4AdotNet.Quaternion to System.Numerics.Quaternion
+                                    new System.Numerics.Quaternion(
+                                        eyeRight.Orientation.X,
+                                        eyeRight.Orientation.Y,
+                                        eyeRight.Orientation.Z,
+                                        eyeRight.Orientation.W
+                                    )
                                 );
+
+                                // print position to console if verbose
+                                if (verbose) { Console.WriteLine($"Position: {positionData}"); }
                             }
                         }
 
-                        Console.WriteLine("End of file.");
+                        stopwatch.Stop();
+
+                        if (stopwatch.Elapsed.TotalSeconds > 0)
+                        {
+                            Console.WriteLine("End of file.");
+
+                            string elapsedTime = $"Total elapsed time: {stopwatch.Elapsed.TotalSeconds} seconds";
+                            Trace.WriteLine(elapsedTime);
+                            Console.WriteLine(elapsedTime);
+
+                            var fps = totalFrameCount / stopwatch.Elapsed.TotalSeconds;
+                            string trackingSpeed = $"Tracking Speed: {fps} FPS";
+                            Trace.WriteLine(trackingSpeed);
+                            Console.WriteLine(trackingSpeed);
+
+                            Console.WriteLine("Press enter to exit.");
+                            Console.ReadLine();
+                        }
                     }
                 }
             }
@@ -93,6 +128,11 @@ namespace KinectSim
             {
                 Trace.WriteLine(ex);
             }
+        }
+
+        private bool IsTimeInStartEndInterval(TimeSpan time)
+        {
+            return false;
         }
     }
 }

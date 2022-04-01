@@ -137,8 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="dnn_model_2_0_lite_op11.onnx" />
-    <None Include="dnn_model_2_0_op11.onnx" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
