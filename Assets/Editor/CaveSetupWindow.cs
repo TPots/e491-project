@@ -54,6 +54,7 @@ public class CaveSetupWindow : EditorWindow
             EditorGUI.indentLevel++;
             caveSetupTemplate.userObjectReference.position = EditorGUILayout.Vector3Field("Position", caveSetupTemplate.userObjectReference.position);
             caveSetupTemplate.userObjectReference.rotation = EditorGUILayout.Vector3Field("Rotation", caveSetupTemplate.userObjectReference.rotation);
+            caveSetupTemplate.trackUser = EditorGUILayout.Toggle("Enable User Tracking", caveSetupTemplate.trackUser);
             GUILayout.Space(spaceConst);
             EditorGUI.indentLevel--;
             caveSetupTemplate.numberOfDisplays = EditorGUILayout.IntSlider("Number of Displays", caveSetupTemplate.numberOfDisplays,0,8);
@@ -109,6 +110,9 @@ public class CaveSetupWindow : EditorWindow
             RandomizeDisplays( caveSetupTemplate );
         }
 
+        // Mark CaveSetup As Dirty so we save the object
+        EditorUtility.SetDirty(caveSetupTemplate);
+
     }
 
     public void GenerateObjects( CaveSetupTemplate caveSetupTemplate ){
@@ -123,7 +127,7 @@ public class CaveSetupWindow : EditorWindow
         setupScr.caveSetupTemplate = caveSetupTemplate;
         setupObj.transform.position = caveSetupTemplate.rootObjectReference.position;
         setupObj.transform.rotation = Quaternion.Euler( caveSetupTemplate.rootObjectReference.rotation );
-
+        GenerateZMQ( setupObj );
         GameObject userObj = GenerateUser( caveSetupTemplate.userObjectReference, setupObj );
 
         setupScr.userObj = userObj;
@@ -190,10 +194,11 @@ public class CaveSetupWindow : EditorWindow
 
         camScr.displayObject = displayObj;
         camScr.displayScr = displayScr;
+        camScr.camIdx = cameraIdx;
 
         camObj.AddComponent<Camera>();
         Camera cam = camObj.GetComponent<Camera>();
-        cam.targetDisplay = cameraIdx;
+        //cam.targetDisplay = cameraIdx;
         //Display.displays[ cameraIdx ].Activate();
 
         camScr.updateScr();
@@ -257,12 +262,12 @@ public class CaveSetupWindow : EditorWindow
     private void GenerateZMQ( GameObject setupObj )
     {
         GameObject zmq = new GameObject("ZMQ");
-        zmp.transform.setParent( setupObj.transform );
+        zmq.transform.SetParent( setupObj.transform );
 
         CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
 
-        zmq.AddComponent<UserTracker>();
-        UserTracker ut = zmp.GetComponent<UserTracker>();
+        zmq.AddComponent<PubSub.UserTracker>();
+        PubSub.UserTracker ut = zmq.GetComponent<PubSub.UserTracker>();
         ut.setupObj = setupObj;
         ut.setupScr = setupScr;
     }
