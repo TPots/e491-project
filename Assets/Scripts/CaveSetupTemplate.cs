@@ -7,6 +7,7 @@ public class CaveSetupTemplate : ScriptableObject{
     public CaveObjectReference rootObjectReference;
     public float rootScale = 1f;
     public CaveObjectReference userObjectReference;
+    public bool trackUser;
     public int numberOfDisplays;
     public Vector2 defaultDisplayDimentions = new Vector2(0.5f,0.5f);
     public CaveDisplayTemplate display1 = new CaveDisplayTemplate("1");

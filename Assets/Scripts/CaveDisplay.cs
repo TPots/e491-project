@@ -51,7 +51,7 @@ public class CaveDisplay : MonoBehaviour
 
     public void updateScr()
     {
-        this.gameObject.transform.localPosition = this.caveDisplayTemplate.caveObjectReference.position;;
+        this.gameObject.transform.localPosition = this.caveDisplayTemplate.caveObjectReference.position;
         this.gameObject.transform.localRotation = Quaternion.Euler( this.caveDisplayTemplate.caveObjectReference.rotation );
         this.gameObject.transform.localScale = Vector3.one;
 

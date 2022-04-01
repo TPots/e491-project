@@ -54,6 +54,7 @@ public class CaveSetupWindow : EditorWindow
             EditorGUI.indentLevel++;
             caveSetupTemplate.userObjectReference.position = EditorGUILayout.Vector3Field("Position", caveSetupTemplate.userObjectReference.position);
             caveSetupTemplate.userObjectReference.rotation = EditorGUILayout.Vector3Field("Rotation", caveSetupTemplate.userObjectReference.rotation);
+            caveSetupTemplate.trackUser = EditorGUILayout.Toggle("Enable User Tracking", caveSetupTemplate.trackUser);
             GUILayout.Space(spaceConst);
             EditorGUI.indentLevel--;
             caveSetupTemplate.numberOfDisplays = EditorGUILayout.IntSlider("Number of Displays", caveSetupTemplate.numberOfDisplays,0,8);
@@ -108,6 +109,9 @@ public class CaveSetupWindow : EditorWindow
         {
             RandomizeDisplays( caveSetupTemplate );
         }
+
+        // Mark CaveSetup As Dirty so we save the object
+        EditorUtility.SetDirty(caveSetupTemplate);
 
     }
 
@@ -194,7 +198,7 @@ public class CaveSetupWindow : EditorWindow
 
         camObj.AddComponent<Camera>();
         Camera cam = camObj.GetComponent<Camera>();
-        cam.targetDisplay = cameraIdx;
+        //cam.targetDisplay = cameraIdx;
         //Display.displays[ cameraIdx ].Activate();
 
         camScr.updateScr();

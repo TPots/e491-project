@@ -18,8 +18,7 @@ public class CaveSetup : MonoBehaviour{
     {
         Vector3 rootPosition = this.gameObject.transform.position;
         Vector3 userPosition = this.userObj.transform.position;
-        Vector3 displayPosition = new Vector3();
-
+        
         // Draw gizmo for the root object
         Gizmos.color = Color.gray;
         Gizmos.DrawSphere( this.gameObject.transform.position, 0.25f );
@@ -50,6 +49,7 @@ public class CaveSetup : MonoBehaviour{
 
         //this.userScr.caveObjectReference = this.caveSetupTemplate.userObjectReference;
         this.userScr.updateScr();
+        this.caveSetupTemplate.userObjectReference = this.userScr.caveObjectReference;
 
         CaveDisplayTemplate[] displayArray = 
         {

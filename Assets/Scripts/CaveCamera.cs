@@ -6,12 +6,18 @@ public class CaveCamera : MonoBehaviour{
     public CaveDisplay displayScr;
     public int camIdx;
 
-    public Vector3 userToDisplay;
-
     public float normalDistance;
 
     public Matrix4x4 projectionM;
 
+
+
+    public void Start(){
+        Camera camera = this.gameObject.GetComponent<Camera>();
+        camera.Reset();
+        camera.targetDisplay = this.camIdx;
+        Debug.Log("Cam Idx = " +this. camIdx);
+    }
     public void updateScr()
     {
 
@@ -24,10 +30,12 @@ public class CaveCamera : MonoBehaviour{
     // http://160592857366.free.fr/joe/ebooks/ShareData/Generalized%20Perspective%20Projection.pdf - Paper by Robert Kooima
     public void generalizedPerspectiveProjection(){
     Camera _camera = this.gameObject.GetComponent<Camera>();
-    float n = 0.01f;
-    float f = 100.0f;
-    n = _camera.nearClipPlane;
-    f = _camera.farClipPlane;
+     _camera.nearClipPlane = 0.01f;
+    _camera.farClipPlane = 100.0f;
+    float n = _camera.nearClipPlane;
+    float f = _camera.farClipPlane;
+    Debug.Log(_camera.nearClipPlane);
+    Debug.Log(_camera.farClipPlane);
 
     // Display corners
     Vector3 pa = this.displayScr.cornerLowerLeft; 
@@ -40,16 +48,17 @@ public class CaveCamera : MonoBehaviour{
     Vector3 vr = (pb - pa).normalized;
     Vector3 vu = (pc - pa).normalized;
     Vector3 vn = Vector3.Cross(vu, vr).normalized;
+
     // Compute the screen corner vectors.
     Vector3 va = pa - pe;
     Vector3 vb = pb - pe;
     Vector3 vc = pc - pe;
+
     // Find the distance from the eye to screen plane.
     float d = -Vector3.Dot(va, vn);
 
     // Find the extent of the perpendicular projection. 
-    //float nd = n / d;
-    float nd = 1.0f;
+    float nd = n / d;
 
     float l = Vector3.Dot(vr, va) * nd;
     float r = Vector3.Dot(vr, vb) * nd;
@@ -57,10 +66,49 @@ public class CaveCamera : MonoBehaviour{
     float t = Vector3.Dot(vu, vc) * nd;
     // Load the perpendicular projection.
     _camera.projectionMatrix = Matrix4x4.Frustum(l, r, b, t, n, f);
-    _camera.transform.rotation = Quaternion.LookRotation(-vn, vu);
     }
     
-    
+    public void getAsymProjMatrix(Vector3 lowerLeft, Vector3 lowerRight, Vector3 upperLeft, Vector3 from, float ncp, float fcp)
+    {
+        Camera _camera = this.gameObject.GetComponent<Camera>();
+        _camera.nearClipPlane = ncp;
+        _camera.farClipPlane = fcp;
+        //compute orthonormal basis for the screen - could pre-compute this...
+        Vector3 vr = (lowerRight - lowerLeft).normalized;
+        Vector3 vu = (upperLeft - lowerLeft).normalized;
+        Vector3 vn = Vector3.Cross(vr, vu).normalized;
+
+        //compute screen corner vectors
+        Vector3 va = lowerLeft - from;
+        Vector3 vb = lowerRight - from;
+        Vector3 vc = upperLeft - from;
+
+        //find the distance from the eye to screen plane
+        float n = ncp;
+        float f = fcp;
+        float d = Vector3.Dot(va, vn); // distance from eye to screen
+        float nod = n / d;
+        float l = Vector3.Dot(vr, va) * nod;
+        float r = Vector3.Dot(vr, vb) * nod;
+        float b = Vector3.Dot(vu, va) * nod;
+        float t = Vector3.Dot(vu, vc) * nod;
+
+        //put together the matrix - bout time amirite?
+        Matrix4x4 m = Matrix4x4.zero;
+
+        //from http://forum.unity3d.com/threads/using-projection-matrix-to-create-holographic-effect.291123/
+        m[0, 0] = 2.0f * n / (r - l);
+        m[0, 2] = (r + l) / (r - l);
+        m[1, 1] = 2.0f * n / (t - b);
+        m[1, 2] = (t + b) / (t - b);
+        m[2, 2] = -(f + n) / (f - n);
+        m[2, 3] = (-2.0f * f * n) / (f - n);
+        m[3, 2] = -1.0f;
+
+        _camera.projectionMatrix = m;
+
+    }
+
     public void CalculateProjectionMatrix()
     {
         GameObject displayObj = this.displayObject;
@@ -136,12 +184,6 @@ public class CaveCamera : MonoBehaviour{
         
     }
 
-    public void Start(){
-        Camera camera = this.gameObject.GetComponent<Camera>();
-        camera.Reset();
-        camera.targetDisplay = this.camIdx;
-        Debug.Log("Cam Idx = " +this. camIdx);
-    }
     public void Update(){
         //updateScr();
     }

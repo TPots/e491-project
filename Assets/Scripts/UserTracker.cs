@@ -46,6 +46,7 @@ namespace PubSub {
          
         public GameObject setupObj;
         public CaveSetup setupScr;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -90,39 +91,41 @@ namespace PubSub {
         // Update is called once per frame
         private void Update()
         {
-            int factor = 1000;
-            if (subSocket.TryReceiveFrameString(out var message)){
-                    //Debug.Log("Recieved Data");
-                    //Debug.Log(message);
-                    try{ 
-                        orientation = JsonUtility.FromJson<Orientation>(message);
-                    
-                    
-                    if (orientation_queue.Count == orientation_max_size)
-                    {
-                        Orientation removed_value = orientation_queue.Dequeue();
-                        remove_value_from_average(removed_value);
+            if (setupScr.caveSetupTemplate.trackUser){
+                int factor = 1000;
+                if (subSocket.TryReceiveFrameString(out var message)){
+                        //Debug.Log("Recieved Data");
+                        //Debug.Log(message);
+                        try{ 
+                            orientation = JsonUtility.FromJson<Orientation>(message);
+                        
+                        
+                        if (orientation_queue.Count == orientation_max_size)
+                        {
+                            Orientation removed_value = orientation_queue.Dequeue();
+                            remove_value_from_average(removed_value);
+                        }
+                
+                        
+                        
+                        orientation_queue.Enqueue(orientation);
+                        add_value_to_average(orientation);
+                            user_pos.x = queue_average.pos.x/-factor;
+                            user_pos.y = queue_average.pos.y/-factor;
+                            user_pos.z = queue_average.pos.z/-factor;
+                            user_rot.x = queue_average.quat.x/factor;
+                            user_rot.y = queue_average.quat.y/factor;
+                            user_rot.z = queue_average.quat.z/factor;
+                            user_rot.w = queue_average.quat.w/factor;
+                        // Debug.Log(queue_average.pos.x);
+                        // Debug.Log(queue_average.pos.y);
+                        // Debug.Log(queue_average.pos.z);
                     }
-            
-                    
-                    
-                    orientation_queue.Enqueue(orientation);
-                    add_value_to_average(orientation);
-                        user_pos.x = queue_average.pos.x/-factor;
-                        user_pos.y = queue_average.pos.y/-factor;
-                        user_pos.z = queue_average.pos.z/-factor;
-                        user_rot.x = queue_average.quat.x/factor;
-                        user_rot.y = queue_average.quat.y/factor;
-                        user_rot.z = queue_average.quat.z/factor;
-                        user_rot.w = queue_average.quat.w/factor;
-                    // Debug.Log(queue_average.pos.x);
-                    // Debug.Log(queue_average.pos.y);
-                    // Debug.Log(queue_average.pos.z);
-                }
-                    catch{
-                        Debug.Log($"Failed to Parse Message: {message}");
-                    }
-            setupScr.UpdateFromZMQ(user_pos, Vector3.zero);
+                        catch{
+                            Debug.Log($"Failed to Parse Message: {message}");
+                        }
+                setupScr.UpdateFromZMQ(user_pos, Vector3.zero);
+            }
 
             //gameObject.transform.SetPositionAndRotation( user_pos,user_rot);
 
