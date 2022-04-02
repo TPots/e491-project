@@ -50,7 +50,7 @@ namespace KinectSim
                     // By default, uses GPU to process tracker
                     TrackerConfiguration trackerConfiguration = new TrackerConfiguration();
                     playback.GetCalibration(out Calibration calibration);
-                    if (verbose) { Console.WriteLine($"Recording frame rate: ")}
+                    if (verbose) { Console.WriteLine($"Recording frame rate: "); }
 
                     using (Tracker tracker = new Tracker(calibration, trackerConfiguration))
                     {
