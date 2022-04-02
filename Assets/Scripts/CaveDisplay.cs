@@ -35,6 +35,11 @@ public class CaveDisplay : MonoBehaviour
         Gizmos.DrawLine( this.cornerLowerRight, this.cornerUpperRight);
         Gizmos.color = Color.white;
         Gizmos.DrawSphere( this.gameObject.transform.position, 0.1f );
+
+        Gizmos.DrawSphere(this.cornerUpperLeft,0.05f);
+        Gizmos.DrawSphere(this.cornerUpperRight,0.05f);
+        Gizmos.DrawSphere(this.cornerLowerLeft,0.05f);
+        Gizmos.DrawSphere(this.cornerLowerRight,0.05f);
     }
 
     [ExecuteInEditMode]
