@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -24,7 +24,7 @@ public class CaveSetupWindow : EditorWindow
         if (caveSetupTemplate == null){
             this.Close();
         }
-
+        caveSetupTemplate.label = "Cave-" + caveSetupTemplate.name; 
         CaveDisplayTemplate[] displayArray = 
         {
             caveSetupTemplate.display1,
@@ -38,11 +38,7 @@ public class CaveSetupWindow : EditorWindow
         };
 
         GUILayout.BeginVertical();
-            GUILayout.Label("Setup");
-            EditorGUI.indentLevel++;
-            caveSetupTemplate.label = EditorGUILayout.TextField("Label", caveSetupTemplate.label);
-            GUILayout.Space(spaceConst);
-            EditorGUI.indentLevel--;
+            GUILayout.Label(caveSetupTemplate.label);
             GUILayout.Label("Root Coordinates -- absolute");
             EditorGUI.indentLevel++;
             caveSetupTemplate.rootObjectReference.position = EditorGUILayout.Vector3Field("Position", caveSetupTemplate.rootObjectReference.position);
@@ -100,27 +96,19 @@ public class CaveSetupWindow : EditorWindow
 
         GUILayout.Box("Note that when generating objects, Unity can not be in Play mode. Game objects created while Unity is in Play mode will be deleted upon exiting Play mode.");
 
-        if (GUILayout.Button("Generate Game Object"))
-        {
-            GenerateObjects( caveSetupTemplate );
-        }
-
+        GenerateObjects(caveSetupTemplate);
         if (GUILayout.Button("Randomize Setup"))
         {
             RandomizeDisplays( caveSetupTemplate );
         }
-
         // Mark CaveSetup As Dirty so we save the object
         EditorUtility.SetDirty(caveSetupTemplate);
-
     }
 
     public void GenerateObjects( CaveSetupTemplate caveSetupTemplate ){
 
-        string projectString = System.String.Format("Cave-" + caveSetupTemplate.label);
-        SanitizeProject( projectString );
-
-        GameObject setupObj = new GameObject( projectString );
+        SanitizeProject(  caveSetupTemplate.label );
+        GameObject setupObj = new GameObject( caveSetupTemplate.label  );
         setupObj.AddComponent<CaveSetup>();
         CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
 
