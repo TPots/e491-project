@@ -23,6 +23,7 @@ public class CaveSetupWindow : EditorWindow
 
         if (caveSetupTemplate == null){
             this.Close();
+            return;
         }
         caveSetupTemplate.label = "Cave-" + caveSetupTemplate.name; 
         CaveDisplayTemplate[] displayArray = 

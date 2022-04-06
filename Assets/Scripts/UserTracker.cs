@@ -135,7 +135,8 @@ namespace PubSub {
 
     void OnApplicationQuit()
     {
-        subSocket.Close();
+        if (subSocket != null)
+            subSocket.Close();
         NetMQConfig.Cleanup();
         Debug.Log("Application ending after " + Time.time + " seconds");
     }
