@@ -8,6 +8,7 @@ public class CaveSetupWindow : EditorWindow
 
     CaveSetupTemplate caveSetupTemplate;
     CaveDisplayTemplate selectedDisplayTemplate = null;
+    GameObject setupObj = null;
 
     public static void OpenWindow(CaveSetupTemplate caveSetupTemplate)
     {
@@ -97,19 +98,54 @@ public class CaveSetupWindow : EditorWindow
 
         GUILayout.Box("Note that when generating objects, Unity can not be in Play mode. Game objects created while Unity is in Play mode will be deleted upon exiting Play mode.");
 
-        GenerateObjects(caveSetupTemplate);
+        if (GUILayout.Button("Generate Objects"))
+        {
+            GenerateObjects(caveSetupTemplate);
+        }
         if (GUILayout.Button("Randomize Setup"))
         {
             RandomizeDisplays( caveSetupTemplate );
         }
+
         // Mark CaveSetup As Dirty so we save the object
         EditorUtility.SetDirty(caveSetupTemplate);
+        //updateObjects();
+    }
+    public void updateObjects( ){
+        if(setupObj == null){
+            return;
+        }
+        CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
+
+        List<GameObject> displayObj = new List<GameObject>();
+        List<CaveDisplay> displayScr = new List<CaveDisplay>();
+                CaveDisplayTemplate[] displayArray = 
+        {
+            caveSetupTemplate.display1,
+            caveSetupTemplate.display2,
+            caveSetupTemplate.display3,
+            caveSetupTemplate.display4,
+            caveSetupTemplate.display5,
+            caveSetupTemplate.display6,
+            caveSetupTemplate.display7,
+            caveSetupTemplate.display8
+        };      
+        for(int i = 0 ; i < caveSetupTemplate.numberOfDisplays ; i++ )
+        {
+            GameObject dispObj = GenerateDisplay( displayArray[i], setupObj, caveSetupTemplate.rootScale );
+            GameObject camObj = GenerateCamera(  setupScr.userObj, dispObj, i );
+            displayObj.Add( dispObj );
+            displayScr.Add( dispObj.GetComponent<CaveDisplay>() );
+        } 
+
+        setupScr.init(displayObj, displayScr);
+        setupScr.updateScr();
     }
 
     public void GenerateObjects( CaveSetupTemplate caveSetupTemplate ){
 
         SanitizeProject(  caveSetupTemplate.label );
-        GameObject setupObj = new GameObject( caveSetupTemplate.label  );
+        setupObj = new GameObject( caveSetupTemplate.label  );
         setupObj.AddComponent<CaveSetup>();
         CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
 
