@@ -152,7 +152,6 @@ public class CaveSetupWindow : EditorWindow
         //if (mainCameraEnabled){ Camera.main.enabled = false; }
         GameObject existingObj = GameObject.Find(label);
         if (existingObj == null) return;
-        Debug.Log("Found existing GameObject with matching label. Destroying ...");
         DestroyImmediate(existingObj);
     }
 

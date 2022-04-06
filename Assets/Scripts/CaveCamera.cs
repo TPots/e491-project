@@ -34,8 +34,6 @@ public class CaveCamera : MonoBehaviour{
     _camera.farClipPlane = 100.0f;
     float n = _camera.nearClipPlane;
     float f = _camera.farClipPlane;
-    Debug.Log(_camera.nearClipPlane);
-    Debug.Log(_camera.farClipPlane);
 
     // Display corners
     Vector3 pa = this.displayScr.cornerLowerLeft; 
