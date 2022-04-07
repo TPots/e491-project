@@ -4,6 +4,7 @@ using NetMQ;
 using NetMQ.Sockets;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace PubSub {
     public class UserTracker : MonoBehaviour
@@ -38,6 +39,7 @@ namespace PubSub {
         private Vector3 user_pos;
         private Quaternion user_rot;
         private SubscriberSocket subSocket;
+        private  Thread zmqThread;
 
 
         private Queue<Orientation> orientation_queue;
@@ -62,6 +64,10 @@ namespace PubSub {
             Debug.Log($"Connecting Sub Socket to address: tcp://{host}:{port}");       
             subSocket.Connect($"tcp://{host}:{port}");
             subSocket.SubscribeToAnyTopic();
+
+            zmqThread = new Thread(getZMQMessage);
+            zmqThread.Start();
+
         }
 
         private void remove_value_from_average(Orientation value)
@@ -88,12 +94,9 @@ namespace PubSub {
             queue_average.quat.w += value.quat.w / orientation_max_size;
         }
 
-        // Update is called once per frame
-        private void Update()
-        {
-            if (setupScr.caveSetupTemplate.trackUser){
-                int factor = 1000;
-                if (subSocket.TryReceiveFrameString(out var message)){
+        public void getZMQMessage(){
+            while(true){
+             if (subSocket.TryReceiveFrameString(out var message)){
                         //Debug.Log("Recieved Data");
                         //Debug.Log(message);
                         try{ 
@@ -110,13 +113,14 @@ namespace PubSub {
                         
                         orientation_queue.Enqueue(orientation);
                         add_value_to_average(orientation);
-                            user_pos.x = queue_average.pos.x/-factor;
-                            user_pos.y = queue_average.pos.y/-factor;
-                            user_pos.z = queue_average.pos.z/-factor;
-                            user_rot.x = queue_average.quat.x/factor;
-                            user_rot.y = queue_average.quat.y/factor;
-                            user_rot.z = queue_average.quat.z/factor;
-                            user_rot.w = queue_average.quat.w/factor;
+                        int factor = 1000;
+                        user_pos.x = queue_average.pos.x/-factor;
+                        user_pos.y = queue_average.pos.y/-factor;
+                        user_pos.z = queue_average.pos.z/-factor;
+                        user_rot.x = queue_average.quat.x/factor;
+                        user_rot.y = queue_average.quat.y/factor;
+                        user_rot.z = queue_average.quat.z/factor;
+                        user_rot.w = queue_average.quat.w/factor;
                         // Debug.Log(queue_average.pos.x);
                         // Debug.Log(queue_average.pos.y);
                         // Debug.Log(queue_average.pos.z);
@@ -124,13 +128,53 @@ namespace PubSub {
                         catch{
                             Debug.Log($"Failed to Parse Message: {message}");
                         }
+                }
                 setupScr.UpdateFromZMQ(user_pos, Vector3.zero);
             }
 
+        }
+        // Update is called once per frame
+        private void Update()
+        {
+            // if (setupScr.caveSetupTemplate.trackUser){
+            //     int factor = 1000;
+            //     if (subSocket.TryReceiveFrameString(out var message)){
+            //             //Debug.Log("Recieved Data");
+            //             //Debug.Log(message);
+            //             try{ 
+            //                 orientation = JsonUtility.FromJson<Orientation>(message);
+                        
+                        
+            //             if (orientation_queue.Count == orientation_max_size)
+            //             {
+            //                 Orientation removed_value = orientation_queue.Dequeue();
+            //                 remove_value_from_average(removed_value);
+            //             }
+                
+                        
+                        
+            //             orientation_queue.Enqueue(orientation);
+            //             add_value_to_average(orientation);
+            //                 user_pos.x = queue_average.pos.x/-factor;
+            //                 user_pos.y = queue_average.pos.y/-factor;
+            //                 user_pos.z = queue_average.pos.z/-factor;
+            //                 user_rot.x = queue_average.quat.x/factor;
+            //                 user_rot.y = queue_average.quat.y/factor;
+            //                 user_rot.z = queue_average.quat.z/factor;
+            //                 user_rot.w = queue_average.quat.w/factor;
+            //             // Debug.Log(queue_average.pos.x);
+            //             // Debug.Log(queue_average.pos.y);
+            //             // Debug.Log(queue_average.pos.z);
+            //         }
+            //             catch{
+            //                 Debug.Log($"Failed to Parse Message: {message}");
+            //             }
+            //     setupScr.UpdateFromZMQ(user_pos, Vector3.zero);
+            // }
+
             //gameObject.transform.SetPositionAndRotation( user_pos,user_rot);
 
-
-}
+        //}
         }
 
     void OnApplicationQuit()
@@ -138,6 +182,7 @@ namespace PubSub {
         if (subSocket != null)
             subSocket.Close();
         NetMQConfig.Cleanup();
+        zmqThread.Abort();
         Debug.Log("Application ending after " + Time.time + " seconds");
     }
     }

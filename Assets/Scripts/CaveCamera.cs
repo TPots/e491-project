@@ -14,7 +14,7 @@ public class CaveCamera : MonoBehaviour{
 
     public void Start(){
         Camera camera = this.gameObject.GetComponent<Camera>();
-        camera.Reset();
+        //camera.Reset();
         camera.targetDisplay = this.camIdx;
         Debug.Log("Cam Idx = " +this. camIdx);
     }
@@ -31,7 +31,7 @@ public class CaveCamera : MonoBehaviour{
     public void generalizedPerspectiveProjection(){
     Camera _camera = this.gameObject.GetComponent<Camera>();
      _camera.nearClipPlane = 0.01f;
-    _camera.farClipPlane = 100.0f;
+    _camera.farClipPlane = 1000.0f;
     float n = _camera.nearClipPlane;
     float f = _camera.farClipPlane;
 
