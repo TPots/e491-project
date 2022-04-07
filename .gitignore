@@ -12,7 +12,6 @@ ProjectSettings/
 UserSettings/
 Temp/
 .vscode/
-*.asset
 .DS_Store
 *.brush
 *.sln
