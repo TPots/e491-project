@@ -36,12 +36,21 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\CaveController.cs" />
      <Compile Include="Assets\Demos\Assets\Scripts\Boid.cs" />
      <Compile Include="Assets\Demos\Assets\Scripts\BoidHelper.cs" />
      <Compile Include="Assets\Demos\Assets\Scripts\BoidManager.cs" />
      <Compile Include="Assets\Demos\Assets\Scripts\BoidSettings.cs" />
      <Compile Include="Assets\Demos\Assets\Scripts\Spawner.cs" />
+     <Compile Include="Assets\Demos\CaveController.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\FirstPersonController\Scripts\BasicRigidBodyPush.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\FirstPersonController\Scripts\FirstPersonController.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Mobile\Scripts\CanvasInputs\UICanvasControllerInput.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
      <Compile Include="Assets\Scripts\CaveAlignment.cs" />
      <Compile Include="Assets\Scripts\CaveCamera.cs" />
      <Compile Include="Assets\Scripts\CaveCameraTemplate.cs" />
@@ -52,18 +61,9 @@
      <Compile Include="Assets\Scripts\CaveSetupTemplate.cs" />
      <Compile Include="Assets\Scripts\CaveUser.cs" />
      <Compile Include="Assets\Scripts\UserTracker.cs" />
-     <Compile Include="Assets\StarterAssets\FirstPersonController\Scripts\BasicRigidBodyPush.cs" />
-     <Compile Include="Assets\StarterAssets\FirstPersonController\Scripts\FirstPersonController.cs" />
-     <Compile Include="Assets\StarterAssets\InputSystem\StarterAssetsInputs.cs" />
-     <Compile Include="Assets\StarterAssets\Mobile\Scripts\CanvasInputs\UICanvasControllerInput.cs" />
-     <Compile Include="Assets\StarterAssets\Mobile\Scripts\Utilities\MobileDisableAutoSwitchControls.cs" />
-     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualButton.cs" />
-     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualJoystick.cs" />
-     <Compile Include="Assets\StarterAssets\Mobile\Scripts\VirtualInputs\UIVirtualTouchZone.cs" />
-     <Compile Include="Assets\StarterAssets\TutorialInfo\Scripts\Readme.cs" />
      <None Include="Assets\Demos\Assets\Scripts\BoidCompute.compute" />
-     <None Include="Assets\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />
-     <None Include="Assets\StarterAssets\license.txt" />
+     <None Include="Assets\Demos\StarterAssets\Environment\Shaders\Built-in_RP\Triplanar.shader" />
+     <None Include="Assets\Demos\StarterAssets\license.txt" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

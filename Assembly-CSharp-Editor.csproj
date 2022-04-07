@@ -36,14 +36,14 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Demos\StarterAssets\Editor\FirstPersonStarterAssetsDeployMenu.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Editor\PackageChecker\PackageChecker.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Editor\ScriptingDefineUtils.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\Editor\StarterAssetsDeployMenu.cs" />
+     <Compile Include="Assets\Demos\StarterAssets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
      <Compile Include="Assets\Editor\CaveSetupEditor.cs" />
      <Compile Include="Assets\Editor\CaveSetupWindow.cs" />
-     <Compile Include="Assets\StarterAssets\Editor\FirstPersonStarterAssetsDeployMenu.cs" />
-     <Compile Include="Assets\StarterAssets\Editor\PackageChecker\PackageChecker.cs" />
-     <Compile Include="Assets\StarterAssets\Editor\ScriptingDefineUtils.cs" />
-     <Compile Include="Assets\StarterAssets\Editor\StarterAssetsDeployMenu.cs" />
-     <Compile Include="Assets\StarterAssets\TutorialInfo\Scripts\Editor\ReadmeEditor.cs" />
-     <None Include="Assets\StarterAssets\Editor\PackageChecker\PackageImportList.txt" />
+     <None Include="Assets\Demos\StarterAssets\Editor\PackageChecker\PackageImportList.txt" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2019.4.37f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>
