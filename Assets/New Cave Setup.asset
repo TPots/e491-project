@@ -12,25 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa0acff173e5649cd8837fc5d4fe3f1c, type: 3}
   m_Name: New Cave Setup
   m_EditorClassIdentifier: 
-  label: Untitled
+  label: Cave-New Cave Setup
   rootObjectReference:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
   rootScale: 1
   userObjectReference:
-    position: {x: -0.02, y: 0, z: -0.19}
+    position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
   trackUser: 0
-  numberOfDisplays: 3
+  numberOfDisplays: 1
   defaultDisplayDimentions: {x: 0.5, y: 0.5}
   display1:
     tag: 1
     caveObjectReference:
-      position: {x: 1.9536637, y: 1, z: 1.8458946}
+      position: {x: 0, y: 0, z: 1}
       rotation: {x: 0, y: 0, z: 0}
     displayDimentions: {x: 0.5, y: 0.5}
     drawDistance: 100
-    enableAlignmentStructure: 0
+    enableAlignmentStructure: 1
   display2:
     tag: 2
     caveObjectReference:

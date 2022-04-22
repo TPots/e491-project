@@ -62,11 +62,11 @@ public class CaveDisplay : MonoBehaviour
 
         GameObject thisObj = this.gameObject;
 
-        Vector3 displayWidthOffset = thisObj.transform.rotation*thisObj.transform.localRotation * new Vector3(
+        Vector3 displayWidthOffset = thisObj.transform.rotation * new Vector3(
             this.displayScale * this.caveDisplayTemplate.displayDimentions[0]/2f,0f,0f
         );
 
-        Vector3 displayHeightOffset =  thisObj.transform.rotation*thisObj.transform.localRotation * new Vector3(
+        Vector3 displayHeightOffset =  thisObj.transform.rotation * new Vector3(
             0f,this.displayScale * this.caveDisplayTemplate.displayDimentions[1]/2f,0f
         );
 
