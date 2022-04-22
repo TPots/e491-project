@@ -8,6 +8,8 @@ public class CaveSetupTemplate : ScriptableObject{
     public float rootScale = 1f;
     public CaveObjectReference userObjectReference;
     public bool trackUser;
+    public Vector3 trackingDeviceSignal;
+    public Vector3 retinaOffset = Vector3.zero;
     public int numberOfDisplays;
     public Vector2 defaultDisplayDimentions = new Vector2(0.5f,0.5f);
     public CaveDisplayTemplate display1 = new CaveDisplayTemplate("1");

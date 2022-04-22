@@ -53,6 +53,11 @@ public class CaveSetupWindow : EditorWindow
             caveSetupTemplate.userObjectReference.position = EditorGUILayout.Vector3Field("Position", caveSetupTemplate.userObjectReference.position);
             caveSetupTemplate.userObjectReference.rotation = EditorGUILayout.Vector3Field("Rotation", caveSetupTemplate.userObjectReference.rotation);
             caveSetupTemplate.trackUser = EditorGUILayout.Toggle("Enable User Tracking", caveSetupTemplate.trackUser);
+            EditorGUILayout.Vector3Field("Retina Offset", caveSetupTemplate.retinaOffset);
+            if(GUILayout.Button("Set User Offset"))
+            {
+                caveSetupTemplate.retinaOffset = caveSetupTemplate.trackingDeviceSignal - caveSetupTemplate.userObjectReference.position;
+            }
             GUILayout.Space(spaceConst);
             EditorGUI.indentLevel--;
             caveSetupTemplate.numberOfDisplays = EditorGUILayout.IntSlider("Number of Displays", caveSetupTemplate.numberOfDisplays,0,8);

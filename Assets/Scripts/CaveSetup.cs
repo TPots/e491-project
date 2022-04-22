@@ -47,6 +47,15 @@ public class CaveSetup : MonoBehaviour{
         this.gameObject.transform.rotation = Quaternion.Euler( this.caveSetupTemplate.rootObjectReference.rotation );
         this.gameObject.transform.localScale = Vector3.one * this.caveSetupTemplate.rootScale;
 
+        if(this.caveSetupTemplate.trackUser)
+        {
+            this.userScr.caveObjectReference.position = this.caveSetupTemplate.trackingDeviceSignal + this.caveSetupTemplate.retinaOffset;
+        }
+        else
+        {
+            this.userScr.caveObjectReference.position = this.caveSetupTemplate.userObjectReference.position + this.caveSetupTemplate.retinaOffset;
+        }
+
         //this.userScr.caveObjectReference = this.caveSetupTemplate.userObjectReference;
         this.userScr.updateScr();
         this.caveSetupTemplate.userObjectReference = this.userScr.caveObjectReference;
@@ -74,8 +83,7 @@ public class CaveSetup : MonoBehaviour{
 
     public void UpdateFromZMQ( Vector3 trackedUserPosition, Vector3 trackedUserRotation )
     {
-        this.userScr.caveObjectReference.position = trackedUserPosition;
-        this.userScr.caveObjectReference.rotation = trackedUserRotation;
+        this.caveSetupTemplate.trackingDeviceSignal = trackedUserPosition;
     }
 
     public void Start()

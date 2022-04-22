@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: Cave-New Cave Setup
   rootObjectReference:
-    position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
+    position: {x: 7.18, y: 0, z: 0}
+    rotation: {x: 0, y: -33.96, z: 0}
   rootScale: 1
   userObjectReference:
     position: {x: 0, y: 0, z: 0}
@@ -27,7 +27,7 @@ MonoBehaviour:
     tag: 1
     caveObjectReference:
       position: {x: 0, y: 0, z: 1}
-      rotation: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: -8.56, z: 0}
     displayDimentions: {x: 0.5, y: 0.5}
     drawDistance: 100
     enableAlignmentStructure: 1
