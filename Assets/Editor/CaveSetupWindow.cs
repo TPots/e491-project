@@ -282,6 +282,8 @@ public class CaveSetupWindow : EditorWindow
     {
         GameObject zmq = new GameObject("ZMQ");
         zmq.transform.SetParent( setupObj.transform );
+        zmq.transform.position = Vector3.zero;
+        zmq.transform.rotation = Quaternion.identity;
 
         CaveSetup setupScr = setupObj.GetComponent<CaveSetup>();
 
