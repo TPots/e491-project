@@ -22,7 +22,9 @@ public class CaveDisplay : MonoBehaviour
     public float halfHeight;
     public float minimumNormalHorizontal;
     public float minimumNormalVertical;
-    public GameObject alignmentStructure;
+    public GameObject alignmentStructureRing;
+    public GameObject alignmentStructurePlane;
+
 
     [ExecuteInEditMode]
     public void OnDrawGizmos(){
@@ -90,7 +92,16 @@ public class CaveDisplay : MonoBehaviour
         this.halfHeight = this.caveDisplayTemplate.displayDimentions[1] *0.5f;
 
 
-        if (this.caveDisplayTemplate.enableAlignmentStructure == true){ this.alignmentStructure.SetActive(true); } else{ this.alignmentStructure.SetActive(false); }
+        if (this.caveDisplayTemplate.enableAlignmentStructure == true)
+        { 
+            if(this.caveDisplayTemplate.alignmentStructureSelector == 0){this.alignmentStructureRing.SetActive(true);}else{this.alignmentStructureRing.SetActive(false);}
+            if(this.caveDisplayTemplate.alignmentStructureSelector == 1){this.alignmentStructurePlane.SetActive(true);}else{this.alignmentStructurePlane.SetActive(false);} 
+        } 
+        else
+        { 
+            this.alignmentStructureRing.SetActive(false); 
+            this.alignmentStructurePlane.SetActive(false); 
+        }
     }
 
     void Start()

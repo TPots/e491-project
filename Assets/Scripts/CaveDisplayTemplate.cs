@@ -29,6 +29,7 @@ public class CaveDisplayTemplate
     public Vector2 displayDimentions = new Vector2(0.5f, 0.5f);
     public float drawDistance = 100f;
     public bool enableAlignmentStructure;
+    public int alignmentStructureSelector;
     public CaveDisplayTemplate(string tag)
     {
         /*

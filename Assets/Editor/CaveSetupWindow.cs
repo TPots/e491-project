@@ -86,6 +86,10 @@ public class CaveSetupWindow : EditorWindow
                     selectedDisplayTemplate.displayDimentions = EditorGUILayout.Vector2Field("Display Dimentions",selectedDisplayTemplate.displayDimentions);
                     selectedDisplayTemplate.drawDistance = EditorGUILayout.FloatField("Camera Draw Distance",selectedDisplayTemplate.drawDistance);
                     selectedDisplayTemplate.enableAlignmentStructure = EditorGUILayout.Toggle("Enable Alignment Structure", selectedDisplayTemplate.enableAlignmentStructure);
+                    if(selectedDisplayTemplate.enableAlignmentStructure)
+                    {
+                        selectedDisplayTemplate.alignmentStructureSelector = EditorGUILayout.IntSlider("Alignment Structure", selectedDisplayTemplate.alignmentStructureSelector,0,1); 
+                    }
                 }   
                 else
                 {
@@ -244,7 +248,9 @@ public class CaveSetupWindow : EditorWindow
         dispScr.caveDisplayTemplate = caveDisplayTemplate;
         dispScr.displayScale = rootScale;
         GameObject alignmentStructure = GenerateAlignmentTorus(caveDisplayTemplate, dispObj );
-        dispScr.alignmentStructure = alignmentStructure;
+        dispScr.alignmentStructureRing = alignmentStructure;
+        alignmentStructure = GenerateAlignmentPlane(caveDisplayTemplate, dispObj );
+        dispScr.alignmentStructurePlane = alignmentStructure;
         dispScr.updateScr();
         return dispObj;
     }
@@ -257,34 +263,18 @@ public class CaveSetupWindow : EditorWindow
         alignmentStructure.transform.localPosition = Vector3.zero;
         alignmentStructure.transform.localRotation = Quaternion.identity;
         alignmentStructure.transform.localScale = new Vector3( 1f, 1f, 1f) * Mathf.Min( caveDisplayTemplate.displayDimentions[0], caveDisplayTemplate.displayDimentions[1] );
-        /*
-        GameObject alignmentStructure = new GameObject( name = "alignment structure" );
+
+        return alignmentStructure;
+    }
+
+    private GameObject GenerateAlignmentPlane( CaveDisplayTemplate caveDisplayTemplate, GameObject displayObj )
+    {
+        CaveDisplay caveDisplay = displayObj.GetComponent<CaveDisplay>();
+        GameObject alignmentStructure = PrefabUtility.InstantiatePrefab( Resources.Load("Plane") ) as GameObject;
         alignmentStructure.transform.SetParent( displayObj.transform );
-        alignmentStructure.transform.localPosition = Vector3.zero;
+        alignmentStructure.transform.localPosition = new Vector3( 0f, -caveDisplay.caveDisplayTemplate.displayDimentions[1]/2f, 0f );
         alignmentStructure.transform.localRotation = Quaternion.identity;
-        alignmentStructure.transform.localScale = new Vector3( 1f, 1f, 1f) * Mathf.Min( caveDisplayTemplate.displayDimentions[0], caveDisplayTemplate.displayDimentions[1] );
-
-        GameObject alignmentTorusNear = Instantiate( Resources.Load("rings") ) as GameObject;
-        alignmentTorusNear.name = "Alignment Near";
-        alignmentTorusNear.transform.SetParent( alignmentStructure.transform );
-        alignmentTorusNear.transform.localPosition = new Vector3( 0f,0f,2f );
-        alignmentTorusNear.transform.localRotation = Quaternion.identity;
-        alignmentTorusNear.transform.localScale = new Vector3( 1f, 1f, 1f ) * 1f;
-
-        GameObject alignmentTorusMid = Instantiate( Resources.Load("rings") ) as GameObject;
-        alignmentTorusMid.name = "Alignment Mid";
-        alignmentTorusMid.transform.SetParent( alignmentStructure.transform );
-        alignmentTorusMid.transform.localPosition = new Vector3( 0f,0f,4f );
-        alignmentTorusMid.transform.localRotation = Quaternion.identity;
-        alignmentTorusMid.transform.localScale = new Vector3( 1f, 1f, 1f ) * 2f;
-
-        GameObject alignmentTorusFar = Instantiate( Resources.Load("rings") ) as GameObject;
-        alignmentTorusFar.name = "Alignment Far";
-        alignmentTorusFar.transform.SetParent( alignmentStructure.transform );
-        alignmentTorusFar.transform.localPosition = new Vector3( 0f,0f,8f );
-        alignmentTorusFar.transform.localRotation = Quaternion.identity;
-        alignmentTorusFar.transform.localScale = new Vector3( 1f, 1f, 1f ) * 4f;
-        */
+        
         return alignmentStructure;
     }
 
