@@ -53,7 +53,7 @@ public class CaveSetup : MonoBehaviour{
         }
         else
         {
-            this.userScr.caveObjectReference.position = this.userScr.caveObjectReference.position + this.caveSetupTemplate.retinaOffset;
+            this.userScr.caveObjectReference.position = this.userScr.caveObjectReference.position;
         }
 
         //this.userScr.caveObjectReference = this.caveSetupTemplate.userObjectReference;
