@@ -58,6 +58,10 @@ public class CaveSetupWindow : EditorWindow
             {
                 caveSetupTemplate.retinaOffset = caveSetupTemplate.trackingDeviceSignal - caveSetupTemplate.userObjectReference.position;
             }
+            else
+            {
+                caveSetupTemplate.retinaOffset = caveSetupTemplate.retinaOffset;
+            }
             GUILayout.Space(spaceConst);
             EditorGUI.indentLevel--;
             caveSetupTemplate.numberOfDisplays = EditorGUILayout.IntSlider("Number of Displays", caveSetupTemplate.numberOfDisplays,0,8);
